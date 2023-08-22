@@ -1,13 +1,33 @@
-import { Flex, HStack, Input } from "@chakra-ui/react";
+import { Flex, HStack, Input, Button } from "@chakra-ui/react";
 import React from "react";
 
-interface CreateEventProps {}
+import { type FieldValues, useForm, SubmitHandler } from "react-hook-form";
 
-const CreateEvent: React.FC<CreateEventProps> = () => {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        
-    }
+interface IFromInput {
+    title: string;
+    prefecture: string;
+    city: string;
+    date: Date;
+}
+
+const CreateEvent: React.FC = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmutting },
+    reset,
+    getValues,
+  } = useForm<IFromInput>();
+
+  const onSubmit: SubmitHandler<IFromInput> = async (data: FieldValues) => {
+    // TODO: submit to server
+    console.log(data);
+    // ...
+
+    // kanryou dekitara
+    reset();
+  };
+
   return (
     <>
       <Flex
@@ -25,19 +45,30 @@ const CreateEvent: React.FC<CreateEventProps> = () => {
         <Flex
           bg={"white"}
           borderRadius={"20px"}
-          width={"80%"}
+          width={{base: "90%", sm: "90%", md: "80%"}}
           height={"800px"}
           maxHeight={"800px"}
           opacity={"0.9"}
           p={5}
+          justifyContent={{ base: "center", sm: "center", md: "start" }}
         >
-          <form onSubmit={(event) => handleSubmit(event)}>
-            <HStack alignItems={'center'} justifyContent={'space-between'}>
-                <Input placeholder="Title" name="title" />
-                <Input placeholder="prefecture" name="prefecture" />
-                <Input placeholder="city" name="city" />
-                <Input type="date" name="date" />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <HStack
+              width={{ base: "300px", sm: "300px", md: "full"}}
+              flexDirection={{ base: "column", sm: "column", md: "row" }}
+              alignItems={"center"}
+              justifyContent={"center"}
+            >
+              <Input {...register("title")} placeholder="Title" type="text" />
+              <Input
+                {...register("prefecture")}
+                placeholder="prefecture"
+                type="text"
+              />
+              <Input {...register("city")} placeholder="city" type="text" />
+              <Input {...register("date")} type="date" />
             </HStack>
+            <Button type="submit">Submit</Button>
           </form>
         </Flex>
       </Flex>
