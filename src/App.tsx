@@ -9,7 +9,6 @@ function App() {
     <ChakraBaseProvider theme={customTheme}>
       <Routes>
         <Route path="/" element={<CreateEvent />}></Route>
-        <Route path="/hello" element={<CreateEvent />}></Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ChakraBaseProvider>

@@ -6,6 +6,7 @@ import {
   FormControl,
   Image,
   FormLabel,
+  Box,
 } from "@chakra-ui/react";
 
 import axios from "axios";
@@ -15,6 +16,7 @@ import "react-quill/dist/quill.snow.css";
 
 import { type FieldValues, useForm, SubmitHandler } from "react-hook-form";
 import { useState } from "react";
+import EventImage from "../components/EventImage";
 
 interface IFromInput {
   title: string;
@@ -30,6 +32,20 @@ interface IFromInput {
 
 const CreateEvent: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
+  const [downloadableUrls, setDownloadableUrls] = useState<string[]>([
+    "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
+    "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
+    "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
+    "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
+    "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
+    "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
+    "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
+  ]);
+  const [uploadProgress, setUploadProgress] = useState<number[]>([]);
 
   const {
     register,
@@ -93,7 +109,45 @@ const CreateEvent: React.FC = () => {
     setLoading(false);
     // Reset the form
     reset();
-    data.description = '';
+    data.description = "";
+  };
+
+  // image upload section goes here
+  // Get User input as image files
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setSelectedFiles([...e.target.files]);
+    }
+  };
+
+  // handle upload images. Call this method onClic
+  const handleUpload = async () => {
+    // const storageRef = ref(storage);
+    // // prepare upload here
+    // const uploadTasks = selectedFiles.map((file) => {
+    //   const fileRef = ref(storageRef, `events/${file.name}`);
+    //   const task = uploadBytesResumable(fileRef, file);
+    //   // Listen to the state_changed event to track progress
+    //   task.on("state_changed", (snapshot) => {
+    //     const progress =
+    //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //     setUploadProgress((prevProgress) => [...prevProgress, progress]);
+    //   });
+    //   return task;
+    // });
+    // // upload files from here and get downloadable URL
+    // try {
+    //   const uploadSnapshots = await Promise.all(uploadTasks);
+    //   console.log("started....");
+    //   const urls = await Promise.all(
+    //     uploadSnapshots.map((snapshot) => getDownloadURL(snapshot.ref))
+    //   );
+    //   setDownloadableUrls(urls);
+    //   setUploadProgress([]);
+    //   console.log("finished uploading...");
+    // } catch (error) {
+    //   console.error("Error uploading images:", error);
+    // }
   };
 
   const handleTextArea = (newValue: string) => {
@@ -111,7 +165,7 @@ const CreateEvent: React.FC = () => {
         }}
         alignItems={"center"}
         justifyContent={"center"}
-        width={"100wh"}
+        width={"100%"}
         height={"100vh"}
         p={10}
       >
@@ -119,8 +173,8 @@ const CreateEvent: React.FC = () => {
           bg={"white"}
           borderRadius={"20px"}
           width={{ base: "50%", sm: "70%", md: "100%" }}
-          height={"800px"}
-          maxHeight={"800px"}
+          height={"auto"}
+          // maxHeight={"800px"}
           opacity={"0.9"}
           p={5}
           justifyContent={{ base: "center", sm: "center", md: "start" }}
@@ -177,14 +231,18 @@ const CreateEvent: React.FC = () => {
                   />
                 </Flex>
               </HStack>
-              <ReactQuill
-                theme="snow"
-                onChange={handleTextArea}
-                // ref={(el) => {
-                //   handleQuillRef(el);
-                //   register(el);
-                // }}
-              />
+              <ReactQuill theme="snow" onChange={handleTextArea} />
+              <Box width={"auto"} marginTop={"10px"}>
+                <input type="file" multiple onChange={handleFileInputChange} />
+                <Button
+                  bg={"green.200"}
+                  color={"gray.800"}
+                  _hover={{ bg: "green.300" }}
+                  onClick={handleUpload}
+                >
+                  Upload Images
+                </Button>
+              </Box>
               <Flex
                 width={"full"}
                 maxWidth={"inherit"}
@@ -198,55 +256,16 @@ const CreateEvent: React.FC = () => {
                 opacity={1}
                 cursor={"pointer"}
               >
-                <Image
-                  width={"auto"}
-                  src="https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg"
-                  alt=""
-                  objectFit={"cover"}
-                  borderRadius={"10px"}
-                />
-                <Image
-                  width={"auto"}
-                  src="https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg"
-                  alt=""
-                  objectFit={"cover"}
-                  borderRadius={"10px"}
-                />
-                <Image
-                  width={"auto"}
-                  src="https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg"
-                  alt=""
-                  objectFit={"cover"}
-                  borderRadius={"10px"}
-                />
-                <Image
-                  width={"auto"}
-                  src="https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg"
-                  alt=""
-                  objectFit={"cover"}
-                  borderRadius={"10px"}
-                />
-                <Image
-                  width={"auto"}
-                  src="https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg"
-                  alt=""
-                  objectFit={"cover"}
-                  borderRadius={"10px"}
-                />
-                <Image
-                  width={"auto"}
-                  src="https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg"
-                  alt=""
-                  objectFit={"cover"}
-                  borderRadius={"10px"}
-                />
+                {downloadableUrls.map((url) => (
+                  <EventImage key={url} url={url} />
+                ))}
               </Flex>
               {/* add remaining feild here */}
               <Flex
                 width={"full"}
                 maxWidth={"inherit"}
                 marginTop={"10px"}
-                height={"auto"}
+                height={"inherit"}
                 flexDir={"column"}
                 gap={3}
               >
