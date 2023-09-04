@@ -3,13 +3,10 @@ import {
   HStack,
   Input,
   Button,
-  Textarea,
-  Box,
   FormControl,
-  Text,
+  Image,
   FormLabel,
 } from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
 
 import axios from "axios";
 
@@ -17,6 +14,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 import { type FieldValues, useForm, SubmitHandler } from "react-hook-form";
+import { useState } from "react";
 
 interface IFromInput {
   title: string;
@@ -31,22 +29,29 @@ interface IFromInput {
 }
 
 const CreateEvent: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
-    getValues,
     setValue,
   } = useForm<IFromInput>();
 
-  
+  // here submit the value to the server
   const onSubmit: SubmitHandler<IFromInput> = async (data: FieldValues) => {
     // convert array of url into array of objects
-    const uploadImages = ['http://url1.com/image.png', 'http://url2.com/image.png']  
-    const uploadedImageUrls = uploadImages.map(url => {
-      return { url: url }
-    })
+    const uploadImages = [
+      "http://url1.com/image.png",
+      "http://url2.com/image.png",
+    ];
+    const uploadedImageUrls = uploadImages.map((url) => {
+      return { url: url };
+    });
+
+    // set loading
+    setLoading(true);
 
     // convert comma seperated string into array
     const tagsArray = data.tags.split(",").map((tag: string) => tag.trim());
@@ -84,7 +89,11 @@ const CreateEvent: React.FC = () => {
       console.error("An error occurred: ", error);
     }
 
-    // reset();
+    // reset the laoding state
+    setLoading(false);
+    // Reset the form
+    reset();
+    data.description = '';
   };
 
   const handleTextArea = (newValue: string) => {
@@ -179,25 +188,58 @@ const CreateEvent: React.FC = () => {
               <Flex
                 width={"full"}
                 maxWidth={"inherit"}
-                bg={"green.500"}
                 height={"200px"}
                 marginTop={"10px"}
                 overflowX={"scroll"}
                 overflowY={"hidden"}
                 whiteSpace={"nowrap"}
-                gap={5}
+                gap={"3"}
+                padding={"2"}
+                opacity={1}
+                cursor={"pointer"}
               >
-                <div>hello world</div>
-                <div>hello world</div>
-                <div>hello world</div>
-                <div>hello world</div>
-                <div>hello world</div>
-                <div>hello world</div>
-                <div>hello world</div>
-                <div>hello world</div>
-                <div>hello world</div>
-                <div>hello world</div>
-                <div>hello world</div>
+                <Image
+                  width={"auto"}
+                  src="https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg"
+                  alt=""
+                  objectFit={"cover"}
+                  borderRadius={"10px"}
+                />
+                <Image
+                  width={"auto"}
+                  src="https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg"
+                  alt=""
+                  objectFit={"cover"}
+                  borderRadius={"10px"}
+                />
+                <Image
+                  width={"auto"}
+                  src="https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg"
+                  alt=""
+                  objectFit={"cover"}
+                  borderRadius={"10px"}
+                />
+                <Image
+                  width={"auto"}
+                  src="https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg"
+                  alt=""
+                  objectFit={"cover"}
+                  borderRadius={"10px"}
+                />
+                <Image
+                  width={"auto"}
+                  src="https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg"
+                  alt=""
+                  objectFit={"cover"}
+                  borderRadius={"10px"}
+                />
+                <Image
+                  width={"auto"}
+                  src="https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg"
+                  alt=""
+                  objectFit={"cover"}
+                  borderRadius={"10px"}
+                />
               </Flex>
               {/* add remaining feild here */}
               <Flex
@@ -258,9 +300,11 @@ const CreateEvent: React.FC = () => {
                 bg={"green.200"}
                 color={"gray.800"}
                 _hover={{ bg: "green.300" }}
-                width={"150px"}
+                width={"auto"}
                 type="submit"
-                disabled={isSubmitting}
+                disabled={loading}
+                isLoading={loading}
+                loadingText={"Createing event"}
               >
                 Submit
               </Button>
