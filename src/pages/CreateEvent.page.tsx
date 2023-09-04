@@ -15,7 +15,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 import { type FieldValues, useForm, SubmitHandler } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EventImage from "../components/EventImage";
 
 interface IFromInput {
@@ -54,6 +54,16 @@ const CreateEvent: React.FC = () => {
     reset,
     setValue,
   } = useForm<IFromInput>();
+
+  // delete image on click and update the state
+  const handleDelete = (urlToDelete: string): void => {
+    const indexToDelete = downloadableUrls.indexOf(urlToDelete);
+    if (indexToDelete > -1) {
+      const updatedUrls = [...downloadableUrls]; // Create a copy
+      updatedUrls.splice(indexToDelete, 1); // Remove the element
+      setDownloadableUrls(updatedUrls); // Update the state
+    } 
+  };
 
   // here submit the value to the server
   const onSubmit: SubmitHandler<IFromInput> = async (data: FieldValues) => {
@@ -257,7 +267,7 @@ const CreateEvent: React.FC = () => {
                 cursor={"pointer"}
               >
                 {downloadableUrls.map((url) => (
-                  <EventImage key={url} url={url} />
+                  <EventImage key={url} url={url} handleDelete={handleDelete} />
                 ))}
               </Flex>
               {/* add remaining feild here */}
