@@ -11,6 +11,8 @@ import {
 } from "@chakra-ui/react";
 import React, { useRef, useState } from "react";
 
+import axios from "axios";
+
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
@@ -22,6 +24,10 @@ interface IFromInput {
   city: string;
   date: Date;
   description: string;
+  tags: string;
+  activities: string;
+  omiyage: string;
+  snsLinks: string;
 }
 
 const CreateEvent: React.FC = () => {
@@ -33,26 +39,56 @@ const CreateEvent: React.FC = () => {
     getValues,
     setValue,
   } = useForm<IFromInput>();
-  const quillRef = useRef<ReactQuill | null>(null);
 
+  
   const onSubmit: SubmitHandler<IFromInput> = async (data: FieldValues) => {
-    // TODO: submit to server
-    console.log("data: ", { ...data });
-    console.log("errors: ",  { ...errors });
-    // ...
+    // convert array of url into array of objects
+    const uploadImages = ['http://url1.com/image.png', 'http://url2.com/image.png']  
+    const uploadedImageUrls = uploadImages.map(url => {
+      return { url: url }
+    })
 
-    // kanryou dekitara
-    //reset();
+    // convert comma seperated string into array
+    const tagsArray = data.tags.split(",").map((tag: string) => tag.trim());
+    const activitesArray = data.activities
+      .split(",")
+      .map((activity: string) => activity.trim());
+    const omiyageArray = data.omiyage
+      .split(",")
+      .map((omiyage: string) => omiyage.trim());
+    const snsLinksArray = data.snsLinks
+      .split(",")
+      .map((snsLink: string) => snsLink.trim());
+
+    // send data to server
+    const completeData = {
+      ...data,
+      images: uploadedImageUrls,
+      tags: tagsArray,
+      activities: activitesArray,
+      omiyage: omiyageArray,
+      snsLinks: snsLinksArray,
+    };
+
+    try {
+      const url = "http://localhost:3000/api/events/create-event";
+
+      const response = await axios.post(url, completeData);
+
+      if (response.data) {
+        console.log("Event created: ", response.data.event.title);
+      } else {
+        console.log("Failed to create event: ", response.statusText);
+      }
+    } catch (error) {
+      console.error("An error occurred: ", error);
+    }
+
+    // reset();
   };
 
   const handleTextArea = (newValue: string) => {
     setValue("description", newValue);
-  };
-
-  const handleQuillRef = (ref: ReactQuill | null) => {
-    if (ref) {
-      quillRef.current = ref;
-    }
   };
 
   return (
@@ -87,6 +123,7 @@ const CreateEvent: React.FC = () => {
                 flexDirection={{ base: "column", sm: "column", md: "row" }}
                 alignItems={"center"}
                 justifyContent={"center"}
+                marginBottom={"3"}
               >
                 <Flex flexDirection={"column"} width={"full"}>
                   <FormLabel htmlFor="title" fontSize={"xs"} color={"red.700"}>
@@ -131,19 +168,6 @@ const CreateEvent: React.FC = () => {
                   />
                 </Flex>
               </HStack>
-              {/* <HStack marginTop={"10px"} width={"full"}>
-                <Textarea
-                  {...register("description", { required: true })}
-                  size={"sm"}
-                  placeholder="Write information about event."
-                  resize={"none"}
-                  cols={10}
-                  rows={10}
-                ></Textarea>
-                {errors.description && (
-                  <p role="alert">{errors.description.message}</p>
-                )}
-              </HStack> */}
               <ReactQuill
                 theme="snow"
                 onChange={handleTextArea}
@@ -174,6 +198,60 @@ const CreateEvent: React.FC = () => {
                 <div>hello world</div>
                 <div>hello world</div>
                 <div>hello world</div>
+              </Flex>
+              {/* add remaining feild here */}
+              <Flex
+                width={"full"}
+                maxWidth={"inherit"}
+                marginTop={"10px"}
+                height={"auto"}
+                flexDir={"column"}
+                gap={3}
+              >
+                <Flex width={"full"} flexDir={"column"}>
+                  <FormLabel htmlFor="title" fontSize={"xs"} color={"red.700"}>
+                    *Tags
+                  </FormLabel>
+                  <Input
+                    {...register("tags", { required: true })}
+                    placeholder="tags"
+                    type="text"
+                  />
+                </Flex>
+                <Flex width={"full"} flexDir={"column"}>
+                  <FormLabel htmlFor="title" fontSize={"xs"} color={"red.700"}>
+                    *Activities
+                  </FormLabel>
+                  <Input
+                    {...register("activities", { required: true })}
+                    placeholder="activities"
+                    type="text"
+                  />
+                </Flex>
+                <Flex width={"full"} flexDir={"column"}>
+                  <FormLabel
+                    htmlFor="omiyage"
+                    fontSize={"xs"}
+                    color={"red.700"}
+                  >
+                    *Omiyage
+                  </FormLabel>
+                  <Input
+                    {...register("omiyage", { required: true })}
+                    placeholder="omiyage"
+                    type="text"
+                  />
+                </Flex>
+                <Flex width={"full"} flexDir={"column"}>
+                  <FormLabel htmlFor="title" fontSize={"xs"} color={"red.700"}>
+                    *SnsLinks
+                  </FormLabel>
+                  <Input
+                    {...register("snsLinks", { required: true })}
+                    placeholder="snslinks"
+                    type="text"
+                  />
+                </Flex>
               </Flex>
               <Button
                 marginTop={"10px"}
