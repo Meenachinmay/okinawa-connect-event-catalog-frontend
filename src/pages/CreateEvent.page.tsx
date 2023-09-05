@@ -7,6 +7,7 @@ import {
   Image,
   FormLabel,
   Box,
+  CloseButton,
 } from "@chakra-ui/react";
 
 import axios from "axios";
@@ -20,7 +21,10 @@ import EventImage from "../components/EventImage";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../firebase/clientApp";
 
-interface IFromInput {
+import { inputFields } from "../data-arrays/input-field.array";
+import { CustomInput } from "../components/custom-components/CustomInput.input";
+
+export interface IFromInput {
   title: string;
   prefecture: string;
   city: string;
@@ -42,12 +46,6 @@ const CreateEvent: React.FC = () => {
 
   const [downloadableUrls, setDownloadableUrls] = useState<string[]>([
     "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
-    "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
-    "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
-    "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
-    "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
-    "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
-    "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
   ]);
   const [uploadProgress, setUploadProgress] = useState<number[]>([]);
 
@@ -58,6 +56,8 @@ const CreateEvent: React.FC = () => {
     reset,
     setValue,
   } = useForm<IFromInput>();
+
+  console.log(errors);
 
   // delete image on click and update the state
   const handleDelete = (urlToDelete: string): void => {
@@ -71,6 +71,11 @@ const CreateEvent: React.FC = () => {
 
   // here submit the value to the server
   const onSubmit: SubmitHandler<IFromInput> = async (data: FieldValues) => {
+    if (errors) {
+      console.log(errors);
+      alert('errors in forms');
+      return;
+    } 
     // convert array of url into array of objects
     const uploadImages = [
       "http://url1.com/image.png",
@@ -95,6 +100,10 @@ const CreateEvent: React.FC = () => {
       .split(",")
       .map((snsLink: string) => snsLink.trim());
 
+    const foodOptions = data.foodOptions
+      .split(",")
+      .map((foodOption: string) => foodOption.trim());
+
     // send data to server
     const completeData = {
       ...data,
@@ -103,6 +112,7 @@ const CreateEvent: React.FC = () => {
       activities: activitesArray,
       omiyage: omiyageArray,
       snsLinks: snsLinksArray,
+      foodOptions: foodOptions,
     };
 
     try {
@@ -190,7 +200,6 @@ const CreateEvent: React.FC = () => {
           borderRadius={"0px"}
           width={{ base: "50%", sm: "70%", md: "100%" }}
           height={"full"}
-          // maxHeight={"800px"}
           opacity={"1"}
           p={5}
           justifyContent={{ base: "center", sm: "center", md: "start" }}
@@ -209,9 +218,10 @@ const CreateEvent: React.FC = () => {
                     *Title
                   </FormLabel>
                   <Input
-                    {...register("title", { required: true })}
+                    {...register("title", { required: "Title is required" })}
                     placeholder="Title"
                     type="text"
+                    borderRadius={"0px"}
                   />
                 </Flex>
 
@@ -223,6 +233,7 @@ const CreateEvent: React.FC = () => {
                     {...register("prefecture", { required: true })}
                     placeholder="prefecture"
                     type="text"
+                    borderRadius={"0px"}
                   />
                 </Flex>
 
@@ -234,6 +245,7 @@ const CreateEvent: React.FC = () => {
                     {...register("city", { required: true })}
                     placeholder="city"
                     type="text"
+                    borderRadius={"0px"}
                   />
                 </Flex>
 
@@ -244,6 +256,7 @@ const CreateEvent: React.FC = () => {
                   <Input
                     {...register("date", { required: true })}
                     type="date"
+                    borderRadius={"0px"}
                   />
                 </Flex>
               </HStack>
@@ -255,29 +268,28 @@ const CreateEvent: React.FC = () => {
                   color={"white"}
                   _hover={{ bg: "green.300" }}
                   onClick={handleUpload}
-                  borderRadius={'0px'}
-                  fontSize={'sm'}
+                  borderRadius={"0px"}
+                  fontSize={"sm"}
                 >
                   Upload Images
                 </Button>
               </Box>
-              <Flex
-                width={"full"}
-                maxWidth={"inherit"}
-                height={"200px"}
-                marginTop={"10px"}
-                overflowX={"scroll"}
-                overflowY={"hidden"}
-                whiteSpace={"nowrap"}
-                gap={"3"}
-                padding={"2"}
-                opacity={1}
-                cursor={"pointer"}
+
+              <div
+                style={{
+                  width: "100%",
+                  height: "200px",
+                  overflowX: "auto",
+                  overflowY: "hidden",
+                  whiteSpace: "nowrap",
+                  marginTop: "10px",
+                }}
               >
                 {downloadableUrls.map((url) => (
-                  <EventImage key={url} url={url} handleDelete={handleDelete} />
+                  <EventImage url={url} handleDelete={handleDelete} key={url} />
                 ))}
-              </Flex>
+              </div>
+
               {/* add remaining feild here */}
               <Flex
                 width={"full"}
@@ -287,70 +299,16 @@ const CreateEvent: React.FC = () => {
                 flexDir={"column"}
                 gap={3}
               >
-                <Flex width={"full"} flexDir={"column"}>
-                  <FormLabel htmlFor="title" fontSize={"xs"} color={"red.700"}>
-                    *Tags
-                  </FormLabel>
-                  <Input
-                    {...register("tags", { required: true })}
-                    placeholder="tags"
-                    type="text"
+                {inputFields.map((field) => (
+                  <CustomInput
+                    key={field.name}
+                    label={field.label}
+                    placeholder={field.placeholder}
+                    register={register}
+                    name={field.name}
+                    required={field.required}
                   />
-                </Flex>
-                <Flex width={"full"} flexDir={"column"}>
-                  <FormLabel htmlFor="title" fontSize={"xs"} color={"red.700"}>
-                    *Activities
-                  </FormLabel>
-                  <Input
-                    {...register("activities", { required: true })}
-                    placeholder="activities"
-                    type="text"
-                  />
-                </Flex>
-                <Flex width={"full"} flexDir={"column"}>
-                  <FormLabel
-                    htmlFor="omiyage"
-                    fontSize={"xs"}
-                    color={"red.700"}
-                  >
-                    *Omiyage
-                  </FormLabel>
-                  <Input
-                    {...register("omiyage", { required: true })}
-                    placeholder="omiyage"
-                    type="text"
-                  />
-                </Flex>
-                <Flex width={"full"} flexDir={"column"}>
-                  <FormLabel htmlFor="title" fontSize={"xs"} color={"red.700"}>
-                    *SnsLinks
-                  </FormLabel>
-                  <Input
-                    {...register("snsLinks", { required: true })}
-                    placeholder="snslinks"
-                    type="text"
-                  />
-                </Flex>
-                <Flex width={"full"} flexDir={"column"}>
-                  <FormLabel htmlFor="foodoptions" fontSize={"xs"} color={"red.700"}>
-                    *Food Options
-                  </FormLabel>
-                  <Input
-                    {...register("foodOptions", { required: true })}
-                    placeholder="food options"
-                    type="text"
-                  />
-                </Flex>
-                <Flex width={"full"} flexDir={"column"}>
-                  <FormLabel htmlFor="train/station" fontSize={"xs"} color={"red.700"}>
-                    *Train / Station
-                  </FormLabel>
-                  <Input
-                    {...register("trains", { required: true })}
-                    placeholder="trains / stations"
-                    type="text"
-                  />
-                </Flex>
+                ))}
               </Flex>
               <Button
                 marginTop={"10px"}
@@ -363,7 +321,7 @@ const CreateEvent: React.FC = () => {
                 isLoading={loading}
                 loadingText={"Createing event"}
                 borderRadius={"0"}
-                fontSize={'sm'}
+                fontSize={"sm"}
               >
                 Submit
               </Button>
