@@ -18,7 +18,7 @@ import { type FieldValues, useForm, SubmitHandler } from "react-hook-form";
 import { useEffect, useState } from "react";
 import EventImage from "../components/EventImage";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { storage } from '../../firebase/clientApp'
+import { storage } from "../../firebase/clientApp";
 
 interface IFromInput {
   title: string;
@@ -64,7 +64,7 @@ const CreateEvent: React.FC = () => {
       const updatedUrls = [...downloadableUrls]; // Create a copy
       updatedUrls.splice(indexToDelete, 1); // Remove the element
       setDownloadableUrls(updatedUrls); // Update the state
-    } 
+    }
   };
 
   // here submit the value to the server
@@ -166,7 +166,7 @@ const CreateEvent: React.FC = () => {
   // useEffect(() => {
   //  if (!selectedFiles) {
   //   return
-  //  } 
+  //  }
   // }, [selectedFiles])
 
   // handling text area value using ReactQuill and react-hook-form
@@ -177,25 +177,19 @@ const CreateEvent: React.FC = () => {
   return (
     <>
       <Flex
-        style={{
-          backgroundImage: "url(./bg.jpg)",
-          height: "100vh",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-        }}
         alignItems={"center"}
         justifyContent={"center"}
         width={"100%"}
-        height={"100vh"}
         p={10}
+        bg={"gray.200"}
       >
         <Flex
           bg={"white"}
-          borderRadius={"20px"}
+          borderRadius={"0px"}
           width={{ base: "50%", sm: "70%", md: "100%" }}
-          height={"auto"}
+          height={"full"}
           // maxHeight={"800px"}
-          opacity={"0.9"}
+          opacity={"1"}
           p={5}
           justifyContent={{ base: "center", sm: "center", md: "start" }}
         >
@@ -333,17 +327,38 @@ const CreateEvent: React.FC = () => {
                     type="text"
                   />
                 </Flex>
+                <Flex width={"full"} flexDir={"column"}>
+                  <FormLabel htmlFor="title" fontSize={"xs"} color={"red.700"}>
+                    *SnsLinks
+                  </FormLabel>
+                  <Input
+                    {...register("snsLinks", { required: true })}
+                    placeholder="snslinks"
+                    type="text"
+                  />
+                </Flex>
+                <Flex width={"full"} flexDir={"column"}>
+                  <FormLabel htmlFor="title" fontSize={"xs"} color={"red.700"}>
+                    *SnsLinks
+                  </FormLabel>
+                  <Input
+                    {...register("snsLinks", { required: true })}
+                    placeholder="snslinks"
+                    type="text"
+                  />
+                </Flex>
               </Flex>
               <Button
                 marginTop={"10px"}
-                bg={"green.200"}
-                color={"gray.800"}
+                bg={"orange.500"}
+                color={"white"}
                 _hover={{ bg: "green.300" }}
-                width={"auto"}
+                width={"full"}
                 type="submit"
                 disabled={loading}
                 isLoading={loading}
                 loadingText={"Createing event"}
+                borderRadius={"0"}
               >
                 Submit
               </Button>
