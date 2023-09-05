@@ -30,6 +30,8 @@ interface IFromInput {
   activities: string;
   omiyage: string;
   snsLinks: string;
+  foodOptions: string;
+  trains: string;
 }
 
 const CreateEvent: React.FC = () => {
@@ -249,10 +251,12 @@ const CreateEvent: React.FC = () => {
               <Box width={"auto"} marginTop={"10px"}>
                 <input type="file" multiple onChange={handleFileInputChange} />
                 <Button
-                  bg={"green.200"}
-                  color={"gray.800"}
+                  bg={"orange.500"}
+                  color={"white"}
                   _hover={{ bg: "green.300" }}
                   onClick={handleUpload}
+                  borderRadius={'0px'}
+                  fontSize={'sm'}
                 >
                   Upload Images
                 </Button>
@@ -328,22 +332,22 @@ const CreateEvent: React.FC = () => {
                   />
                 </Flex>
                 <Flex width={"full"} flexDir={"column"}>
-                  <FormLabel htmlFor="title" fontSize={"xs"} color={"red.700"}>
-                    *SnsLinks
+                  <FormLabel htmlFor="foodoptions" fontSize={"xs"} color={"red.700"}>
+                    *Food Options
                   </FormLabel>
                   <Input
-                    {...register("snsLinks", { required: true })}
-                    placeholder="snslinks"
+                    {...register("foodOptions", { required: true })}
+                    placeholder="food options"
                     type="text"
                   />
                 </Flex>
                 <Flex width={"full"} flexDir={"column"}>
-                  <FormLabel htmlFor="title" fontSize={"xs"} color={"red.700"}>
-                    *SnsLinks
+                  <FormLabel htmlFor="train/station" fontSize={"xs"} color={"red.700"}>
+                    *Train / Station
                   </FormLabel>
                   <Input
-                    {...register("snsLinks", { required: true })}
-                    placeholder="snslinks"
+                    {...register("trains", { required: true })}
+                    placeholder="trains / stations"
                     type="text"
                   />
                 </Flex>
@@ -359,6 +363,7 @@ const CreateEvent: React.FC = () => {
                 isLoading={loading}
                 loadingText={"Createing event"}
                 borderRadius={"0"}
+                fontSize={'sm'}
               >
                 Submit
               </Button>
