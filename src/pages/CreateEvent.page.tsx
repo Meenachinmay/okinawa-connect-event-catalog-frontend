@@ -17,6 +17,8 @@ import "react-quill/dist/quill.snow.css";
 import { type FieldValues, useForm, SubmitHandler } from "react-hook-form";
 import { useEffect, useState } from "react";
 import EventImage from "../components/EventImage";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { storage } from '../../firebase/clientApp'
 
 interface IFromInput {
   title: string;
@@ -132,34 +134,42 @@ const CreateEvent: React.FC = () => {
 
   // handle upload images. Call this method onClic
   const handleUpload = async () => {
-    // const storageRef = ref(storage);
-    // // prepare upload here
-    // const uploadTasks = selectedFiles.map((file) => {
-    //   const fileRef = ref(storageRef, `events/${file.name}`);
-    //   const task = uploadBytesResumable(fileRef, file);
-    //   // Listen to the state_changed event to track progress
-    //   task.on("state_changed", (snapshot) => {
-    //     const progress =
-    //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    //     setUploadProgress((prevProgress) => [...prevProgress, progress]);
-    //   });
-    //   return task;
-    // });
-    // // upload files from here and get downloadable URL
-    // try {
-    //   const uploadSnapshots = await Promise.all(uploadTasks);
-    //   console.log("started....");
-    //   const urls = await Promise.all(
-    //     uploadSnapshots.map((snapshot) => getDownloadURL(snapshot.ref))
-    //   );
-    //   setDownloadableUrls(urls);
-    //   setUploadProgress([]);
-    //   console.log("finished uploading...");
-    // } catch (error) {
-    //   console.error("Error uploading images:", error);
-    // }
+    const storageRef = ref(storage);
+    // prepare upload here
+    const uploadTasks = selectedFiles.map((file) => {
+      const fileRef = ref(storageRef, `events/${file.name}`);
+      const task = uploadBytesResumable(fileRef, file);
+      // Listen to the state_changed event to track progress
+      task.on("state_changed", (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setUploadProgress((prevProgress) => [...prevProgress, progress]);
+      });
+      return task;
+    });
+    // upload files from here and get downloadable URL
+    try {
+      const uploadSnapshots = await Promise.all(uploadTasks);
+      console.log("started....");
+      const urls = await Promise.all(
+        uploadSnapshots.map((snapshot) => getDownloadURL(snapshot.ref))
+      );
+      setDownloadableUrls(urls);
+      setUploadProgress([]);
+      console.log("finished uploading...");
+    } catch (error) {
+      console.error("Error uploading images:", error);
+    }
   };
 
+  // upload image related useEffect here
+  // useEffect(() => {
+  //  if (!selectedFiles) {
+  //   return
+  //  } 
+  // }, [selectedFiles])
+
+  // handling text area value using ReactQuill and react-hook-form
   const handleTextArea = (newValue: string) => {
     setValue("description", newValue);
   };
