@@ -4,25 +4,22 @@ import {
   Input,
   Button,
   FormControl,
-  Image,
   FormLabel,
   Box,
-  CloseButton,
 } from "@chakra-ui/react";
-
-import axios from "axios";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-import { type FieldValues, useForm, SubmitHandler } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useForm, } from "react-hook-form";
+import { useState } from "react";
 import EventImage from "../components/EventImage";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../firebase/clientApp";
 
 import { inputFields } from "../data-arrays/input-field.array";
 import { CustomInput } from "../components/custom-components/CustomInput.input";
+import useSubmitForm from "../hooks/useSubmitForm";
 
 export interface IFromInput {
   title: string;
@@ -39,12 +36,13 @@ export interface IFromInput {
 }
 
 const CreateEvent: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(false);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const [downloadableUrls, setDownloadableUrls] = useState<string[]>([
+    "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
+    "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
     "https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg",
   ]);
   const [uploadProgress, setUploadProgress] = useState<number[]>([]);
@@ -57,8 +55,6 @@ const CreateEvent: React.FC = () => {
     setValue,
   } = useForm<IFromInput>();
 
-  console.log(errors);
-
   // delete image on click and update the state
   const handleDelete = (urlToDelete: string): void => {
     const indexToDelete = downloadableUrls.indexOf(urlToDelete);
@@ -69,72 +65,7 @@ const CreateEvent: React.FC = () => {
     }
   };
 
-  // here submit the value to the server
-  const onSubmit: SubmitHandler<IFromInput> = async (data: FieldValues) => {
-    if (errors) {
-      console.log(errors);
-      alert('errors in forms');
-      return;
-    } 
-    // convert array of url into array of objects
-    const uploadImages = [
-      "http://url1.com/image.png",
-      "http://url2.com/image.png",
-    ];
-    const uploadedImageUrls = uploadImages.map((url) => {
-      return { url: url };
-    });
-
-    // set loading
-    setLoading(true);
-
-    // convert comma seperated string into array
-    const tagsArray = data.tags.split(",").map((tag: string) => tag.trim());
-    const activitesArray = data.activities
-      .split(",")
-      .map((activity: string) => activity.trim());
-    const omiyageArray = data.omiyage
-      .split(",")
-      .map((omiyage: string) => omiyage.trim());
-    const snsLinksArray = data.snsLinks
-      .split(",")
-      .map((snsLink: string) => snsLink.trim());
-
-    const foodOptions = data.foodOptions
-      .split(",")
-      .map((foodOption: string) => foodOption.trim());
-
-    // send data to server
-    const completeData = {
-      ...data,
-      images: uploadedImageUrls,
-      tags: tagsArray,
-      activities: activitesArray,
-      omiyage: omiyageArray,
-      snsLinks: snsLinksArray,
-      foodOptions: foodOptions,
-    };
-
-    try {
-      const url = "http://localhost:3000/api/events/create-event";
-
-      const response = await axios.post(url, completeData);
-
-      if (response.data) {
-        console.log("Event created: ", response.data.event.title);
-      } else {
-        console.log("Failed to create event: ", response.statusText);
-      }
-    } catch (error) {
-      console.error("An error occurred: ", error);
-    }
-
-    // reset the laoding state
-    setLoading(false);
-    // Reset the form
-    reset();
-    data.description = "";
-  };
+ const { onSubmit, loading } = useSubmitForm();
 
   // image upload section goes here
   // Get User input as image files
@@ -205,7 +136,7 @@ const CreateEvent: React.FC = () => {
           justifyContent={{ base: "center", sm: "center", md: "start" }}
         >
           <FormControl>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit((data) => onSubmit(data, reset, errors))}>
               <HStack
                 width={"full"}
                 flexDirection={{ base: "column", sm: "column", md: "row" }}
