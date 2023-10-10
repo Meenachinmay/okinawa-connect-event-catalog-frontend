@@ -1,0 +1,45 @@
+@keyframes blinkCursor {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+span {
+  animation: blinkCursor 1s infinite;
+}
+
+/* main--- */
+
+.welcome_page_left_side {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 1),
+    /* orange */ rgba(38, 143, 129, 0.5) /* crimson */
+  );
+  backdrop-filter: blur(50px);
+}
+
+.welcome_page_right_side {
+  background-color: rgb(232, 200, 141); /* Orange */
+  clip-path: polygon(0% 0%, 100% 0%, 100% 30%, 0% 70%);
+  z-index: 1;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spin-animation {
+    animation: spin 20s linear infinite;
+}
+
+.login_container {
+  /* background-color: rgb(232, 200, 141); Orange */
+}
