@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Flex, Text, Image } from '@chakra-ui/react'
 
 import { useNavigate } from 'react-router-dom'
@@ -8,9 +8,15 @@ import './navbar.css'
 
 const Navbar: React.FunctionComponent = () => {
   const navigate = useNavigate()
+  const [loggedIn, setLoggedIn] = useState<boolean>(false)
   return (
     <>
-      <Flex width={'full'} height={'70px'} alignItems={'center'}>
+      <Flex
+        width={'full'}
+        height={'70px'}
+        alignItems={'center'}
+        justifyContent={'space-between'}
+      >
         <Flex
           width={'full'}
           height={'full'}
@@ -58,32 +64,34 @@ const Navbar: React.FunctionComponent = () => {
           </Flex>
         </Flex>
         <Flex width={'full'} height={'full'} padding={'5px'}>
-          <Flex
-            width={'full'}
-            padding={'5px'}
-            alignItems={'center'}
-            justifyContent={'end'}
-            gap={'10px'}
-          >
-            <Text
-              bg={'orange.500'}
-              cursor={'pointer'}
-              _hover={{ bg: 'orange.600' }}
-              padding={'8px'}
-              color={'gray.100'}
+          {loggedIn && (
+            <Flex
+              width={'full'}
+              padding={'5px'}
+              alignItems={'center'}
+              justifyContent={'end'}
+              gap={'10px'}
             >
-              Login
-            </Text>
-            <Text
-              bg={'orange.500'}
-              cursor={'pointer'}
-              _hover={{ bg: 'orange.600' }}
-              padding={'8px'}
-              color={'gray.100'}
-            >
-              Register
-            </Text>
-          </Flex>
+              <Text
+                bg={'orange.500'}
+                cursor={'pointer'}
+                _hover={{ bg: 'orange.600' }}
+                padding={'8px'}
+                color={'gray.100'}
+              >
+                Login
+              </Text>
+              <Text
+                bg={'orange.500'}
+                cursor={'pointer'}
+                _hover={{ bg: 'orange.600' }}
+                padding={'8px'}
+                color={'gray.100'}
+              >
+                Register
+              </Text>
+            </Flex>
+          )}
         </Flex>
       </Flex>
     </>
