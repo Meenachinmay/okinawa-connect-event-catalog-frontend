@@ -1,4 +1,4 @@
-import { ChakraBaseProvider } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react'
 import CreateEvent from './pages/CreateEvent.page'
 import customTheme from './chakraUI/theme'
 import { Route, Routes } from 'react-router-dom'
@@ -12,12 +12,13 @@ import Navbar from './components/navbar-component/Navbar'
 import { RecoilRoot } from 'recoil'
 
 import { useLocation } from 'react-router-dom'
+import Calender from './components/calender-components/Calender'
 
 function App() {
   const location = useLocation()
-  const noNavbarRoutes = ['/']
+  const noNavbarRoutes = ['/', '*']
   return (
-    <ChakraBaseProvider theme={customTheme}>
+    <ChakraProvider theme={customTheme}>
       <RecoilRoot>
         {!noNavbarRoutes.includes(location.pathname) && <Navbar />}
         <Routes>
@@ -25,10 +26,11 @@ function App() {
           <Route path="/create-event" element={<CreateEvent />}></Route>
           <Route path="/events" element={<Events />}></Route>
           <Route path="/zara-design" element={<TestingZaraDesign />}></Route>
+          <Route path="/calender-events" element={<Calender />}></Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </RecoilRoot>
-    </ChakraBaseProvider>
+    </ChakraProvider>
   )
 }
 

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { IEvent } from './types/event.type'
+import { IEvent } from '../types/event.type'
 
 export function getMonth(month = dayjs().month()) {
   const year = dayjs().year()
