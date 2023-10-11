@@ -28,3 +28,48 @@ body *{
     scroll-snap-align: start; /* Ensures the start of each slide aligns with the start of the scroll container */
 }
 
+.events_dots {
+  width: 10px;
+  height: 10px;
+  background-color: #c05621;
+  border-radius: 50%;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.model-overlay {
+  background-color: rgba(0, 0, 0, 0.4); /* Slightly dimmed black overlay */
+  backdrop-filter: blur(5px); /* Blur effect */
+  opacity: 1;
+}
+
+/* Base styles for the tooltip-wrapper */
+.tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* Base styles for the tooltip content */
+.tooltip-content {
+  position: absolute;
+  bottom: 100%; /* Place it on top of the target element */
+  left: 50%; /* Center it horizontally */
+  transform: translateX(-50%); /* Adjust for exact centering */
+  padding: 5px 10px;
+  background-color: #3a3939;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  white-space: nowrap; /* Prevent the tooltip from wrapping text */
+  opacity: 0; /* Start hidden */
+  pointer-events: none; /* Make sure it doesn't interfere with other interactions */
+  transition: opacity 0.3s; /* For smooth fade-in effect */
+  z-index: 1;
+}
+
+/* Display the tooltip upon hovering the wrapper */
+.tooltip-wrapper:hover .tooltip-content {
+  opacity: 1; /* Show it */
+}
+
