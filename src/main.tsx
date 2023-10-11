@@ -5,12 +5,16 @@ import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 import ContextWrapper from './__context__/ContextWrapper.tsx'
 
+import { RecoilRoot } from 'recoil'
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <ContextWrapper>
-        <App />
-      </ContextWrapper>
-    </BrowserRouter>
+    <RecoilRoot>
+      <BrowserRouter>
+        <ContextWrapper>
+          <App />
+        </ContextWrapper>
+      </BrowserRouter>
+    </RecoilRoot>
   </React.StrictMode>,
 )

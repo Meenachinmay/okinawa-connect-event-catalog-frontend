@@ -33,15 +33,8 @@ const Tooltip: React.FC<ITooltipProps> = ({
     <>
       {' '}
       <div className="tooltip-wrapper">
-        <motion.span
-          initial="hidden"
-          animate="visible"
-          variants={fadeInUpwards}
-          className="target-element"
-        >
-          {children}
-        </motion.span>
-        <div className="tooltip-content">{_string}</div>
+        {children}
+      <div className="tooltip-content">{_string}</div>
       </div>
     </>
   )

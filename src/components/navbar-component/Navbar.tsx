@@ -25,7 +25,13 @@ const Navbar: React.FunctionComponent = () => {
           padding={'5px'}
           gap={'2'}
         >
-          <Text fontSize={'28px'} marginLeft={'10px'} color={'gray.800'}>
+          <Text
+            onClick={() => navigate('/')}
+            cursor={'pointer'}
+            fontSize={'28px'}
+            marginLeft={'10px'}
+            color={'gray.800'}
+          >
             Okinawa Connect
           </Text>
           <Image src="/favicon.svg" width={'50px'} height={'50px'}></Image>

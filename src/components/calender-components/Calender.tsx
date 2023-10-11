@@ -4,10 +4,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import GlobalContext from '../../__context__/GlobalContext'
 import { events } from '../../data-arrays/event.index'
 import { IEvent } from '../../types/event.type'
-import { getMonth, processEventsIntoDateStructure } from '../../utils/calender-utils'
+import {
+  getMonth,
+  processEventsIntoDateStructure,
+} from '../../utils/calender-utils'
 import CalenderHeader from './CalenderHeader'
 import Month from './Month'
-
 
 const Calender: React.FC = () => {
   const [currentMonth, setCurrentMonth] = useState(getMonth())
@@ -28,12 +30,15 @@ const Calender: React.FC = () => {
       <Flex
         width={'full'}
         gap={'1'}
-        height={'100vh'}
         flexDir={'column'}
-        padding={'50px'}
+        padding={'20px'}
       >
-        <CalenderHeader />
-        <Flex width={'100%'} gap={'5'}>
+        <Flex
+          flexDir={'column'}
+          padding={'10px'}
+          gap={'5'}
+        >
+          <CalenderHeader />
           <Month month={currentMonth} eventsByDate={eventsByDate} />
         </Flex>
       </Flex>
