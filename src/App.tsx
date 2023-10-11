@@ -19,7 +19,6 @@ function App() {
   const noNavbarRoutes = ['/', '*']
   return (
     <ChakraProvider theme={customTheme}>
-      <RecoilRoot>
         {!noNavbarRoutes.includes(location.pathname) && <Navbar />}
         <Routes>
           <Route path="/" element={<WelcomePage />}></Route>
@@ -29,7 +28,6 @@ function App() {
           <Route path="/calender-events" element={<Calender />}></Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </RecoilRoot>
     </ChakraProvider>
   )
 }

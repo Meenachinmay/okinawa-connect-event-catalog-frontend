@@ -3,9 +3,11 @@ import React from 'react'
 import { useRecoilState } from 'recoil'
 import { authUIState } from '../../atoms/auth-ui-state'
 
+import { useNavigate } from 'react-router-dom'
+
 const Login: React.FunctionComponent = () => {
   const [authViewState, setAuthUIState] = useRecoilState(authUIState)
-
+    const navigate = useNavigate();
   return (
     <>
       <Flex
@@ -48,6 +50,7 @@ const Login: React.FunctionComponent = () => {
             color={'white'}
             fontWeight={'bold'}
             fontSize={'20px'}
+            onClick={() => navigate('/calender-events')}
           >
             LOGIN
           </Button>

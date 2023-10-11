@@ -1,4 +1,4 @@
-import { Flex, Icon, Text, Tooltip } from '@chakra-ui/react'
+import { Button, Flex, Icon, Text } from '@chakra-ui/react'
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 
@@ -8,6 +8,7 @@ import { FcLike, FcViewDetails } from 'react-icons/fc'
 import '../../App.css'
 import { IDay } from '../../types/day.type'
 import Model from '../ui-models/EventModel'
+import Tooltip from '../reusable-ui-components/Tooltip'
 
 const Day: React.FC<IDay> = ({ day, events }: IDay) => {
   const [dayColor, setDayColor] = useState<string>('gray.100')
@@ -18,6 +19,7 @@ const Day: React.FC<IDay> = ({ day, events }: IDay) => {
   }
 
   useEffect(() => {
+    console.log('day component')
     // If the day has events and it's also today's date
     if (
       events?.length &&
@@ -87,13 +89,16 @@ const Day: React.FC<IDay> = ({ day, events }: IDay) => {
           <p>{day.format('DD')}</p>
           <Flex
             width={'full'}
-            maxWidth={'full'}
+            flexDir={'column'}
+            flexGrow={1}
             height={'100%'}
+            maxWidth={'full'}
             gap={1}
             wrap={'wrap'}
+            bg={'red.300'}
           >
             {events?.map(e => (
-              <Flex>
+              <Flex key={e.id}>
                 <div className="events_dots" key={e.id}></div>
                 <div>{e.title}</div>
               </Flex>
