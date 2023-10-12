@@ -12,7 +12,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 
 import { useForm } from 'react-hook-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import EventImage from '../components/EventImage'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { storage } from '../../firebase/clientApp'
@@ -42,8 +42,6 @@ const CreateEvent: React.FC = () => {
 
   const [downloadableUrls, setDownloadableUrls] = useState<string[]>([
     'https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg',
-    'https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg',
-    'https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg',
   ])
   const [uploadProgress, setUploadProgress] = useState<number[]>([])
 
@@ -65,6 +63,7 @@ const CreateEvent: React.FC = () => {
     }
   }
 
+  // here we are calling a async Hook for submit form data to the server
   const { onSubmit, loading } = useSubmitForm()
 
   // image upload section goes here
@@ -105,11 +104,11 @@ const CreateEvent: React.FC = () => {
   }
 
   // upload image related useEffect here
-  // useEffect(() => {
-  //  if (!selectedFiles) {
-  //   return
-  //  }
-  // }, [selectedFiles])
+  useEffect(() => {
+   if (!selectedFiles) {
+    return
+   }
+  }, [selectedFiles])
 
   // handling text area value using ReactQuill and react-hook-form
   const handleTextArea = (newValue: string) => {
@@ -136,7 +135,7 @@ const CreateEvent: React.FC = () => {
         >
           <FormControl>
             <form
-              onSubmit={handleSubmit(data => onSubmit(data, reset, errors))}
+              onSubmit={handleSubmit(data => onSubmit(data, reset, errors, downloadableUrls))}
             >
               <HStack
                 width={'full'}
