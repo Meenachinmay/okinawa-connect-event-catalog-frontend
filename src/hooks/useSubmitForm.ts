@@ -3,6 +3,8 @@ import axios from "axios";
 import { FieldValues, FieldErrors } from "react-hook-form";
 import { IFromInput } from "../pages/CreateEvent.page";
 
+import * as dayjs from 'dayjs';
+
 const useSubmitForm = () => {
   const [loading, setLoading] = useState(false);
 
@@ -12,14 +14,11 @@ const useSubmitForm = () => {
   const onSubmit = async (
     data: FieldValues,
     reset: () => void,
-    errors: FieldErrors<IFromInput>
+    errors: FieldErrors<IFromInput>,
+    downloadAbleImageURLs: string[],
   ) => {
     
-    const uploadImages = [
-      "http://url1.com/image.png",
-      "http://url2.com/image.png",
-    ];
-    const uploadedImageUrls = uploadImages.map((url) => {
+    const uploadedImageUrls = downloadAbleImageURLs.map((url) => {
       return { url };
     });
 
@@ -27,6 +26,7 @@ const useSubmitForm = () => {
 
     const completeData = {
       ...data,
+      date: dayjs(data.date).format('YYYY-MM-DD'),
       images: uploadedImageUrls,
       tags: arrayFromString(data.tags),
       activities: arrayFromString(data.activities),

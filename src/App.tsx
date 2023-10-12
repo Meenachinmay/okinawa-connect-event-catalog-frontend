@@ -8,26 +8,31 @@ import Events from './pages/Events.page'
 import TestingZaraDesign from './pages/TestingZaraDesign'
 import Navbar from './components/navbar-component/Navbar'
 
-// import recoil
-import { RecoilRoot } from 'recoil'
-
 import { useLocation } from 'react-router-dom'
 import Calender from './components/calender-components/Calender'
+
+import '../src/App.css'
+import { RecoilRoot } from 'recoil'
+import ContextWrapper from './__context__/ContextWrapper'
 
 function App() {
   const location = useLocation()
   const noNavbarRoutes = ['/', '*']
   return (
     <ChakraProvider theme={customTheme}>
-        {!noNavbarRoutes.includes(location.pathname) && <Navbar />}
-        <Routes>
-          <Route path="/" element={<WelcomePage />}></Route>
-          <Route path="/create-event" element={<CreateEvent />}></Route>
-          <Route path="/events" element={<Events />}></Route>
-          <Route path="/zara-design" element={<TestingZaraDesign />}></Route>
-          <Route path="/calender-events" element={<Calender />}></Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+      {!noNavbarRoutes.includes(location.pathname) && <Navbar />}
+      <RecoilRoot>
+        <ContextWrapper>
+          <Routes>
+            <Route path="/" element={<WelcomePage />}></Route>
+            <Route path="/create-event" element={<CreateEvent />}></Route>
+            <Route path="/events" element={<Events />}></Route>
+            <Route path="/zara-design" element={<TestingZaraDesign />}></Route>
+            <Route path="/calender-events" element={<Calender />}></Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </ContextWrapper>
+      </RecoilRoot>
     </ChakraProvider>
   )
 }
