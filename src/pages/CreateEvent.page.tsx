@@ -40,9 +40,7 @@ const CreateEvent: React.FC = () => {
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
 
-  const [downloadableUrls, setDownloadableUrls] = useState<string[]>([
-    'https://visitokinawajapan.com/wp-content/uploads/2021/11/di136_kv_okinawa-at-a-glance.jpg',
-  ])
+  const [downloadableUrls, setDownloadableUrls] = useState<string[]>([])
   const [uploadProgress, setUploadProgress] = useState<number[]>([])
 
   const {
@@ -88,19 +86,23 @@ const CreateEvent: React.FC = () => {
       })
       return task
     })
+
     // upload files from here and get downloadable URL
     try {
       const uploadSnapshots = await Promise.all(uploadTasks)
       console.log('started....')
+
       const urls = await Promise.all(
         uploadSnapshots.map(snapshot => getDownloadURL(snapshot.ref)),
       )
+
       setDownloadableUrls(urls)
       setUploadProgress([])
       console.log('finished uploading...')
     } catch (error) {
       console.error('Error uploading images:', error)
     }
+
   }
 
   // upload image related useEffect here

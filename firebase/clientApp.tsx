@@ -3,13 +3,14 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDiiP227HJwauDlH_5VorBUdnZu-GIQRrc",
-  authDomain: "upload-multiple.firebaseapp.com",
-  projectId: "upload-multiple",
-  storageBucket: "upload-multiple.appspot.com",
-  messagingSenderId: "887154303893",
-  appId: "1:887154303893:web:a0deca7e93569a3b9c0c9c",
+  apiKey: "AIzaSyCvpJ-QDIor8WzErElhpBUhirYVLo38ggs",
+  authDomain: "okinawaconnectdocs.firebaseapp.com",
+  projectId: "okinawaconnectdocs",
+  storageBucket: "okinawaconnectdocs.appspot.com",
+  messagingSenderId: "514411124430",
+  appId: "1:514411124430:web:85895eebb7cf9f0ab0629f"
 };
 
 // Initialize Firebase
